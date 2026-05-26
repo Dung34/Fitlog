@@ -6,7 +6,7 @@
 * **Trạng thái**: Bản thảo nâng cấp (Next.js)  
 * **Nền tảng**: PWA (iOS/iPhone Standalone)  
 * **Ngày khởi tạo**: 26/05/2026  
-* **Công nghệ cốt lõi**: Next.js 14+ (App Router), TypeScript, Tailwind CSS, Zustand, Serwist (PWA)
+* **Công nghệ cốt lõi**: Next.js 14+ (App Router), TypeScript, Tailwind CSS, Konsta UI, Zustand, Serwist (PWA)
 
 ## **1\. Tổng quan dự án (Project Overview)**
 
@@ -59,14 +59,16 @@ Dữ liệu được tổ chức dưới cấu trúc JSON chuẩn và được q
 
 ## **5\. Yêu cầu phi chức năng & Trải nghiệm iOS PWA (Non-Functional)**
 
-* **Độ mượt mà và Giao diện (UI/UX):** Sử dụng Tailwind CSS kết hợp hệ thống component của Shadcn UI (bản chất xây dựng trên Radix UI) nhằm tạo ra các phần tử phản hồi nhanh (Responsive), mục tiêu tương tác (Touch Targets) đạt kích thước tối thiểu 44x44 pixel theo Hướng dẫn giao diện người dùng của Apple (Human Interface Guidelines).  
+* **Độ mượt mà và Giao diện (UI/UX):** Sử dụng Tailwind CSS kết hợp **Konsta UI** (theme `ios`) nhằm tạo giao diện bám sát Human Interface Guidelines của Apple. Konsta cung cấp sẵn các pattern iOS-native như `Page`, `Navbar`, `List`, `Sheet` (Bottom Sheet), `Block`, `ListInput` — phù hợp trải nghiệm mobile-first trên iPhone. Mục tiêu tương tác (Touch Targets) đạt kích thước tối thiểu 44×44 pixel.  
 * **Định hình Standalone:** Khai báo tệp manifest.json (hoặc thông qua cấu hình Serwist) với thuộc tính "display": "standalone" và "orientation": "portrait". Khi đưa ra màn hình chính, app sẽ ẩn hoàn toàn thanh URL của trình duyệt Safari, mang lại cảm giác nguyên bản như ứng dụng tải từ App Store.  
 * **Khả năng vận hành ngoại tuyến:** Ứng dụng phải hoạt động bình thường kể cả khi thiết bị ngắt kết nối mạng hoàn toàn. Mọi dữ liệu thao tác trong phòng tập được lưu tức thời vào LocalStorage và sẵn sàng đồng bộ lên Server ở các giai đoạn sau.
 
 ## **6\. Kế hoạch triển khai kỹ thuật (Implementation Roadmap)**
 
-1. **Sprint 1 (Khởi tạo):** Thiết lập Project Next.js 14+ (App Router, TypeScript). Cài đặt Tailwind CSS và Shadcn UI. Tích hợp thư viện PWA (Serwist/@ducanh2912/next-pwa) để sinh tự động tệp Service Worker và Manifest tương thích tối đa với iOS (bao gồm Apple Touch Icons).  
-2. **Sprint 2 (Quản lý trạng thái):** Hiện thực hóa cấu trúc dữ liệu bằng Zustand Store. Cấu hình cơ chế persist để tự động hóa việc đọc/ghi xuống LocalStorage. Viết các hàm tiện ích (Hooks) để CRUD bài tập và hiệp tập.  
-3. **Sprint 3 (Giao diện Mobile):** Xây dựng trang chủ hiển thị lịch, màn hình Bottom Sheet chọn bài tập, bảng lưới ghi số lượng rep/mức tạ và nút sao chép nhanh hiệp tập.  
-4. **Sprint 4 (Phát hành cá nhân & Thử nghiệm):** Triển khai dự án lên nền tảng Vercel. Sử dụng iPhone mở trình duyệt Safari, truy cập liên kết và thực hiện thao tác "Thêm vào màn hình chính" (Add to Home Screen). Tiến hành kiểm thử trực tiếp tại phòng tập trong trạng thái ngắt kết nối mạng.
+> Chi tiết đầy đủ từng sprint, task, acceptance criteria và cấu trúc thư mục: xem **[Phase 1 MVP Roadmap](./phase1-mvp-roadmap.md)**.
+
+1. **Sprint 1 (Khởi tạo):** Thiết lập Project Next.js 14+ (App Router, TypeScript). Cài đặt Tailwind CSS và **Konsta UI** (`theme="ios"`). Tích hợp PWA (Serwist) để sinh Service Worker và Manifest tương thích iOS (Apple Touch Icons, `display: standalone`).  
+2. **Sprint 2 (Quản lý trạng thái):** Hiện thực hóa cấu trúc dữ liệu bằng Zustand Store + persist LocalStorage. Viết hooks/utilities CRUD cho Exercise, WorkoutSession, WorkoutSet. Seed danh sách bài tập mẫu (Gym & Calisthenics).  
+3. **Sprint 3 (Giao diện Mobile):** Xây dựng Dashboard (Konsta `List` + `Card`), màn hình Workout Editor với `Sheet` chọn bài tập, `ListInput` nhập weight/reps (`inputMode="decimal"`), nút Duplicate Set.  
+4. **Sprint 4 (Phát hành cá nhân & Thử nghiệm):** Deploy Vercel. Kiểm thử iPhone Safari → Add to Home Screen → test offline tại phòng tập.
 

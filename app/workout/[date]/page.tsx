@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  Block,
-  Button,
-  Navbar,
-  NavbarBackLink,
-  Page,
-} from "konsta/react";
+import { Block, Button, Navbar, NavbarBackLink, Page } from "konsta/react";
 import { useParams, useRouter } from "next/navigation";
-import { addDays, formatDate, parseDate } from "@/lib/utils/date";
+import { WorkoutEditor } from "@/components/workout/workout-editor";
+import { parseDate } from "@/lib/utils/date";
 
 export default function WorkoutPage() {
   const router = useRouter();
@@ -41,33 +36,5 @@ export default function WorkoutPage() {
     );
   }
 
-  return (
-    <Page>
-      <Navbar
-        title={formatDate(date)}
-        subtitle={date}
-        left={<NavbarBackLink onClick={() => router.push("/")} />}
-        right={
-          <Button clear small onClick={() => router.push("/exercises")}>
-            Bài tập
-          </Button>
-        }
-      />
-
-      <Block strong inset className="flex gap-2">
-        <Button outline onClick={() => router.push(`/workout/${addDays(date, -1)}`)}>
-          ← Trước
-        </Button>
-        <Button outline onClick={() => router.push(`/workout/${addDays(date, 1)}`)}>
-          Sau →
-        </Button>
-      </Block>
-
-      <Block strong inset>
-        <p className="text-center text-black/60 dark:text-white/60">
-          Workout Editor — Sprint 3
-        </p>
-      </Block>
-    </Page>
-  );
+  return <WorkoutEditor date={date} />;
 }

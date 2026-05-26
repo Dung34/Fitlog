@@ -1,14 +1,22 @@
 "use client";
 
-import { Block, List, ListItem } from "konsta/react";
+import { Block } from "konsta/react";
+import { SessionSummaryCard } from "@/components/dashboard/session-summary-card";
+import { useStoreHydrated } from "@/lib/hooks/use-store-hydrated";
 import { useFitLogStore } from "@/lib/store/use-fit-log-store";
-import { getSessionsWithStats } from "@/lib/utils/volume";
-import { formatDate } from "@/lib/utils/date";
+import { useRouter } from "next/navigation";
 
 export function SessionList() {
-  const sessions = useFitLogStore((state) => state.sessions);
-  const sets = useFitLogStore((state) => state.sets);
-  const sessionsWithStats = getSessionsWithStats(sessions, sets);
+  const router = useRouter();
+  const hydrated = useStoreHydrated();
+  const getSessionsWithStats = useFitLogStore(
+    (state) => state.getSessionsWithStats,
+  );
+  const sessionsWithStats = getSessionsWithStats();
+
+  if (!hydrated) {
+    return null;
+  }
 
   if (sessionsWithStats.length === 0) {
     return (
@@ -21,16 +29,17 @@ export function SessionList() {
   }
 
   return (
-    <List strongIos outlineIos>
+    <Block strong inset className="space-y-3">
       {sessionsWithStats.map(({ session, stats }) => (
-        <ListItem
+        <button
           key={session.id}
-          link
-          href={`/workout/${session.date}`}
-          title={formatDate(session.date)}
-          subtitle={`${stats.exerciseCount} bài · ${stats.setCount} set · ${stats.totalVolume.toLocaleString("vi-VN")} kg`}
-        />
+          type="button"
+          className="w-full text-left"
+          onClick={() => router.push(`/workout/${session.date}`)}
+        >
+          <SessionSummaryCard date={session.date} stats={stats} />
+        </button>
       ))}
-    </List>
+    </Block>
   );
 }

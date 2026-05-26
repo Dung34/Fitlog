@@ -1,9 +1,10 @@
 "use client";
 
 import { useFitLogStore } from "@/lib/store/use-fit-log-store";
+import { useStoreHydrated } from "@/lib/hooks/use-store-hydrated";
 import { todayISO } from "@/lib/utils/date";
 import { Block, Button, List, ListItem, Navbar, Page } from "konsta/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 interface SmokeResult {
   name: string;
@@ -155,21 +156,10 @@ function runSmokeTests(): SmokeResult[] {
 
 export default function Sprint2SmokePage() {
   const [results, setResults] = useState<SmokeResult[]>([]);
-  const [hydrated, setHydrated] = useState(
-    () => useFitLogStore.persist.hasHydrated(),
-  );
+  const hydrated = useStoreHydrated();
   const exerciseCount = useFitLogStore((state) => state.exercises.length);
   const sessionCount = useFitLogStore((state) => state.sessions.length);
   const setCount = useFitLogStore((state) => state.sets.length);
-
-  useEffect(() => {
-    if (hydrated) {
-      return;
-    }
-    return useFitLogStore.persist.onFinishHydration(() => {
-      setHydrated(true);
-    });
-  }, [hydrated]);
 
   const handleRun = useCallback(() => {
     setResults(runSmokeTests());
